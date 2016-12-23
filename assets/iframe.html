@@ -1,0 +1,49 @@
+<html>
+    <body>
+        <!-- https://github.com/zendesk/zendesk_app_framework_sdk -->
+        <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
+        <style>
+         body,th, td { font-family: proxima-nova, sans-serif; font-size: 0.8em }
+         th { text-align: left }
+         table, th { border: 1px solid #999; width: 100% }
+        </style>
+
+        <div id="app"></div>
+        <script>
+         // Initialise the Zendesk JavaScript API client
+         // https://developer.zendesk.com/apps/docs/apps-v2
+         var client = ZAFClient.init();
+         var mainEl = document.querySelector('#app');
+         client.invoke('resize', { width: '100%', height: '400px' });
+
+         function refreshDisplay() {
+             return client.get('ticket.requester.email')
+                          .then(function(data) {
+                              var url = 'https://{{setting.hostname}}/zendesk/widget?email=' +
+                                        encodeURIComponent(data['ticket.requester.email']);
+                              
+                              return client.request({
+                                  url: url,
+                                  type: 'GET',
+                                  secure: true,
+                                  headers: {"Authorization": "Basic {{setting.apiKey}}:{{setting.apiSecret}}"},
+                                  dataType: 'html'
+                              }).then(function(response) {
+                                  mainEl.innerHTML = response;
+                              }).then(function() {
+                                  var height = mainEl.getBoundingClientRect().height+ 100;
+                                  console.log('bounding rect', mainEl.getBoundingClientRect());
+                                  client.invoke('resize', { height: height });
+                              });
+                          });
+         }
+
+         client.on('app.registered', function(data) {
+             refreshDisplay();
+         });
+         client.on('ticket.updated', function(data) {
+             refreshDisplay();
+         });
+        </script>
+    </body>
+</html>

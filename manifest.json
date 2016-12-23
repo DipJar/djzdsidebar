@@ -1,0 +1,35 @@
+{
+    "name": "dipjar-sidebar",
+    "author": {
+        "name": "Chris Whatley",
+        "email": "chris.whatley@dipjar.com",
+        "url": "https://www.dipjar.com"
+    },
+    "defaultLocale": "en",
+    "private": true,
+    "location": {
+        "support": {
+            "ticket_sidebar": "assets/iframe.html"
+        }
+    },
+    "domainWhiteList": ["{{setting.hostname}}"],
+    "parameters": [
+        {
+            "name": "apiKey",
+            "type": "text",
+            "secure": true
+        },
+        {
+            "name": "apiSecret",
+            "type": "text",
+            "secure": true
+        },
+        {
+            "name": "hostname",
+            "type": "text",
+            "secure": true
+        }
+    ],
+    "version": "1.0",
+    "frameworkVersion": "2.0"
+}
